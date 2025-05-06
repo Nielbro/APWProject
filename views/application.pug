@@ -1,0 +1,353 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(
+      name="description"
+      content="Apply for a credit card or loan with our secure online application form"
+    )
+    meta(content="width=device-width, initial-scale=1.0" name="viewport")
+    title Credit Card/Loan Application
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      
+      .form-container {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      h1 {
+        color: #333;
+        text-align: center;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: #555;
+      }
+
+      input, select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      input:focus, select:focus {
+        outline: none;
+        border-color: #4CAF50;
+        box-shadow: 0 0 5px rgba(76,175,80,0.2);
+      }
+
+      button {
+        background-color: #1a237e;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background-color: #151b60;
+      }
+
+      button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .button-exit {
+        background-color: #dc3545;
+      }
+
+      .button-exit:hover {
+        background-color: #bb2d3b;
+      }
+
+      .error {
+        color: #ff0000;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+      }
+
+      .error-summary {
+        border: 2px solid #dc3545;
+        border-radius: 4px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        display: none;
+      }
+
+      .error-summary.visible {
+        display: block;
+      }
+
+      [aria-invalid="true"] {
+        border-color: #dc3545;
+      }
+
+  body
+    div.form-container
+      h1(role="heading" aria-level="1") Credit Card/Loan Application
+      form#applicationForm(
+        method="POST" 
+        novalidate
+      )
+        div#formErrors(
+          role="alert"
+          aria-live="polite"
+          class="error-summary"
+        )
+        fieldset
+          legend Application Details
+          
+          div.form-group
+            label(for="type") Select Type:
+            select#type(
+              required
+              name="type"
+              aria-required="true"
+              aria-describedby="typeError"
+            )
+              option(value="") -- Please select an option --
+              option(value="credit-card") Credit Card
+              option(value="loan") Loan
+            div.error(
+              id="typeError"
+              aria-live="polite"
+            )
+          
+          div.form-group
+            label(for="loanType") Loan Type:
+            select#loanType(
+              name="loanType"
+              aria-required="false"
+              aria-describedby="loanTypeError"
+            )
+              option(value="") -- Select if applying for loan --
+              option(value="personal") Personal Loan
+              option(value="auto") Auto Loan
+              option(value="home") Home Loan
+              option(value="business") Business Loan
+            div.error(
+              id="loanTypeError"
+              aria-live="polite"
+            )
+          
+          div.form-group
+            label(for="income") Annual Income ($):
+            input#income(
+              required
+              name="income"
+              type="number"
+              min="0"
+              step="1000"
+              placeholder="Enter your annual income"
+              aria-required="true"
+              aria-describedby="incomeError"
+            )
+            div.error(
+              id="incomeError"
+              aria-live="polite"
+            )
+          
+          div.form-group
+            label(for="creditScore") Credit Score:
+            input#creditScore(
+              required
+              name="creditScore"
+              type="number"
+              min="300"
+              max="850"
+              placeholder="Enter score between 300-850"
+              aria-required="true"
+              aria-describedby="creditScoreError"
+            )
+            div.error(
+              id="creditScoreError"
+              aria-live="polite"
+            )
+         
+          div.button-group
+            button(
+              type="submit"
+              aria-label="Submit application"
+            ) Submit
+            button.button-exit(
+              type="button" 
+              aria-label="Exit application"
+              onclick="exitApplication()"
+            ) Exit
+
+    script.
+      // Initial state for loan type field
+      window.addEventListener('DOMContentLoaded', function() {
+        const loanTypeGroup = document.getElementById('loanType').closest('.form-group');
+        loanTypeGroup.style.display = 'none';
+      });
+
+      // Form submission handler
+      document.getElementById('applicationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        let isValid = true;
+        const errors = [];
+        const errorSummary = document.getElementById('formErrors');
+        
+        // Clear previous errors
+        errorSummary.innerHTML = '';
+        errorSummary.classList.remove('visible');
+        const errorElements = document.getElementsByClassName('error');
+        Array.from(errorElements).forEach(error => error.textContent = '');
+
+        // Type validation
+        const type = document.getElementById('type');
+        if (!type.value) {
+          const errorMessage = 'Please select an application type';
+          type.nextElementSibling.textContent = errorMessage;
+          type.setAttribute('aria-invalid', 'true');
+          errors.push(errorMessage);
+          isValid = false;
+        } else {
+          type.setAttribute('aria-invalid', 'false');
+        }
+
+        // Income validation
+        const income = document.getElementById('income');
+        if (!income.value) {
+          const errorMessage = 'Annual income is required';
+          income.nextElementSibling.textContent = errorMessage;
+          income.setAttribute('aria-invalid', 'true');
+          errors.push(errorMessage);
+          isValid = false;
+        } else if (income.value < 0) {
+          const errorMessage = 'Income cannot be negative';
+          income.nextElementSibling.textContent = errorMessage;
+          income.setAttribute('aria-invalid', 'true');
+          errors.push(errorMessage);
+          isValid = false;
+        } else {
+          income.setAttribute('aria-invalid', 'false');
+        }
+
+        // Credit Score validation
+        const creditScore = document.getElementById('creditScore');
+        if (!creditScore.value) {
+          const errorMessage = 'Credit score is required';
+          creditScore.nextElementSibling.textContent = errorMessage;
+          creditScore.setAttribute('aria-invalid', 'true');
+          errors.push(errorMessage);
+          isValid = false;
+        } else if (creditScore.value < 300 || creditScore.value > 850) {
+          const errorMessage = 'Credit score must be between 300 and 850';
+          creditScore.nextElementSibling.textContent = errorMessage;
+          creditScore.setAttribute('aria-invalid', 'true');
+          errors.push(errorMessage);
+          isValid = false;
+        } else {
+          creditScore.setAttribute('aria-invalid', 'false');
+        }
+
+        // Show loan type validation only if loan is selected
+        if (type.value === 'loan' && !document.getElementById('loanType').value) {
+          const errorMessage = 'Please select a loan type';
+          document.getElementById('loanType').nextElementSibling.textContent = errorMessage;
+          document.getElementById('loanType').setAttribute('aria-invalid', 'true');
+          errors.push(errorMessage);
+          isValid = false;
+        } else {
+          document.getElementById('loanType').setAttribute('aria-invalid', 'false');
+        }
+
+        if (errors.length > 0) {
+          errorSummary.innerHTML = 
+            '<h2>Please correct the following errors:</h2><ul>' +
+            errors.map(error => '<li>' + error + '</li>').join('') +
+            '</ul>';
+          errorSummary.classList.add('visible');
+          errorSummary.focus();
+          return;
+        }
+
+        if (isValid) {
+          const submitButton = document.querySelector('button[type="submit"]');
+          submitButton.disabled = true;
+          submitButton.innerHTML = 'Submitting...';
+
+          // Prepare the form data
+          const formData = {
+            type: type.value,
+            loanType: document.getElementById('loanType').value,
+            income: parseFloat(income.value),
+            creditScore: parseInt(creditScore.value)
+          };
+
+          // Submit using fetch
+          fetch('/application', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              alert('Application approved! ' + data.message);
+              window.location.href = '/dashboard';
+            } else {
+              alert('Application error: ' + data.message);
+              submitButton.disabled = false;
+              submitButton.innerHTML = 'Submit';
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while submitting the application');
+            submitButton.disabled = false;
+            submitButton.innerHTML = 'Submit';
+          });
+        }
+      });
+
+      // Show/hide loan type based on application type
+      document.getElementById('type').addEventListener('change', function() {
+        const loanTypeGroup = document.getElementById('loanType').closest('.form-group');
+        if (this.value === 'loan') {
+          loanTypeGroup.style.display = 'block';
+          document.getElementById('loanType').setAttribute('aria-required', 'true');
+        } else {
+          loanTypeGroup.style.display = 'none';
+          document.getElementById('loanType').setAttribute('aria-required', 'false');
+        }
+      });
+
+      function exitApplication() {
+        window.location.href = '/dashboard';
+      }
+
+
+//-Fransisco Cruz submission; Adam Nielsen edits

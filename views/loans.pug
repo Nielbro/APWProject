@@ -1,0 +1,59 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(
+      content="width=device-width, initial-scale=1.0" 
+      name="viewpoint"
+      )
+    title Banking Services
+    link(
+      type="text/css"
+      href="project.css" 
+      rel="stylesheet"
+      )
+    link(
+      type="image/x-icon" 
+      rel="icon" 
+      href="favicon.ico"
+      )
+  body
+    header
+      img.websiteicon(
+        alt="Evil Corporation" 
+        height="25%" 
+        src="ecorp.png"
+        )
+      h2#hiddenTruth vil Corporation
+      nav.navbar-left
+        ul
+          a.navmenu(href="/index")
+            li Home 
+          a.navmenu(href="/checking")
+            li Checking
+          a.navmenu(href="/mortgage")
+            li Mortgage
+          a.navmenu(href="/loans") 
+            li Loans
+      nav.navbar-right
+        ul
+          a.login(href="/customer-login")
+            li Customer Login
+          a.login(href="/login")
+            li Admin Login
+          a.login(href="#")
+            li Customer Registration
+      section.loans
+        h1 Applying for a Loan?
+        p.mainbodytext
+          | Be it for plans big or small, planned or unplanned,<br>
+          | we here at E Corp will hear you out, and more often then not, back<br>
+          |   YOU up! Schedule a visit with us today!
+      .mainservices
+        a.mrmiddle(href="/application") Apply for a Loan!
+    footer
+      p © 2025 E Corp. All rights reserved.
+    script(src="script.js")
+
+
+//-Alex submission; Rad Peña edits
